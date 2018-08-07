@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: api-gateway
+  dubbo:
+    application:
+      name: zuul
+  freemarker:
+    request-context-attribute: req  #req访问request
+    suffix: .html  #后缀名
+    content-type: text/html
+    enabled: true
+    cache: false #缓存配置
+    template-loader-path: classpath:/templates/ #模板加载路径 按需配置
+    charset: UTF-8 #编码格式
+    settings:
+      number_format: '0.##'   #数字格式化，无小数点
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  datasource:
+    url: jdbc:mysql://10.1.94.91:3306/api_gateway
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+server:
+  port: 8080
+
+zuul:
+  ignoredServices: '*'
+  routes:
+    servicea:
+      path: /servicea/**
+      serviceId: servicea
+    serviceb:
+      path: /serviceb/**
+      serviceId: serviceb
+  ratelimit:
+    enabled: true
+    behind-proxy: true
+    repository: REDIS
+    policies:
+      servicea:
+          limit: 10
+          refresh-interval: 60
+          type:
+            - TENANT
+            - URL
+#      serviceb:
+#          limit: 2
+#          refresh-interval: 60
+#          type:
+#            - origin
+#            - url
+
+micro:
+  auth:
+    jwt-subject-name: test
+
+jwt:
+  secret: 123434354
+  expiration: 1800
+  refreshexpire: 7200
+  session-expiration: 1830
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+mybatis:
+  typeAliasesPackage: com.glodon.zuul
+  mapperLocations: classpath:mapper/*.xml

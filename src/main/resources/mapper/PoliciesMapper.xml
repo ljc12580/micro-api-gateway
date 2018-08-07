@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.glodon.zuul.mapper.PoliciesMapper">
+    <resultMap id="Policies" type="com.glodon.zuul.model.Policies">
+        <result column="id" property="id"/>
+        <result column="service_id" property="serviceId"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="limit" property="limit"/>
+        <result column="quota" property="quota"/>
+        <result column="refresh_interval" property="refreshInterval"/>
+    </resultMap>
+
+    <select id="queryPoliciesByTenant" resultMap="Policies">
+        SELECT * from policies where service_id=#{key} and tenant_id=#{tenantId};
+    </select>
+</mapper>
